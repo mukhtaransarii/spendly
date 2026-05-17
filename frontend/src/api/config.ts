@@ -1,4 +1,4 @@
-export const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
+export const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 export function getToken(): string | null {
   return localStorage.getItem('token')
@@ -10,7 +10,7 @@ export async function apiFetch<T>(
 ): Promise<T> {
   const token = getToken()
 
-  const res = await fetch(`${BASE_URL}${endpoint}`, {
+  const res = await fetch(`${BASE_URL}/api/${endpoint}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
