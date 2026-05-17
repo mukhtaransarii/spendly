@@ -38,6 +38,8 @@ export function ExpenseTable({ items, onEdit, onDelete }: ExpenseTableProps) {
   return (
     <div className="bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-sm">
       <table className="w-full table-fixed">
+        
+        {/* Heading  */}
         <thead className="bg-zinc-50 border-b border-zinc-200">
           <tr className="text-[10px] uppercase tracking-wider text-zinc-500">
             <th className="text-left px-3 py-2 w-[40%]">Title</th>
@@ -46,37 +48,41 @@ export function ExpenseTable({ items, onEdit, onDelete }: ExpenseTableProps) {
             <th className="text-center px-3 py-2 w-[30%]">Action</th>
           </tr>
         </thead>
+
         <tbody>
+          {/* Rows */}
           {items.map(item => (
             <tr key={item.id} className="border-b border-zinc-100 hover:bg-zinc-50">
+              
+              {/* Title */}
               <td className="px-3 py-2">
-                <div className={`flex gap-2 min-w-0 ${item.note ? 'items-start' : 'items-center'}`}>
+                <div className="flex gap-2 min-w-0 items-center">
                   <div className={`shrink-0 ${item.method === 'cash' ? 'text-orange-600' : 'text-blue-600'}`}>
                     <CategoryIcon category={item.category} />
                   </div>
                   <div className="min-w-0">
                     <div className="text-[13px] font-medium truncate leading-none">{item.title}</div>
-                    <div className="mono text-[10px] text-zinc-400">{item.time}</div>
-                    {item.note && <div className="mono text-[10px] text-zinc-400">{item.note}</div>}
+                    <div className="mono text-[9px] text-zinc-400">{item.time}</div>
+                    {item.note && (
+                     <div onClick={() => alert(item.note)} className="mono text-[10px] text-zinc-400 truncate max-w-full">{item.note}</div>
+                    )}
                   </div>
                 </div>
               </td>
-              <td className={`px-3 py-2 text-[11px] text-zinc-500 font-medium ${item.note ? 'align-bottom' : ''}`}>{item.category}</td>
-              <td className={`px-3 py-2 text-right mono text-[13px] font-semibold ${item.method === 'cash' ? 'text-orange-700' : 'text-blue-700'} ${item.note ? 'align-bottom' : ''}`}>
-                {formatMoney(item.amount)}
-              </td>
-              <td className={`px-3 py-2 ${item.note ? 'align-bottom' : ''}`}>
+
+              {/* Category */}
+              <td className="px-3 py-2 text-[11px] text-zinc-500 font-medium">{item.category}</td>
+              
+              {/* Amount */}
+              <td className={`px-3 py-2 text-right mono text-[13px] font-semibold ${item.method === 'cash' ? 'text-orange-700' : 'text-blue-700'}`}>{formatMoney(item.amount)}</td>
+
+              {/* Actions */}
+              <td className="px-3 py-2">
                 <div className="flex items-center justify-center gap-1">
-                  <button
-                    onClick={() => onEdit(item)}
-                    className="py-0.5 px-2 text-[10px] font-semibold rounded-md border border-zinc-200 hover:bg-zinc-100"
-                  >
+                  <button onClick={() => onEdit(item)} className="py-0.5 px-2 text-[10px] font-semibold rounded-md border border-zinc-200 hover:bg-zinc-100">
                     Edit
                   </button>
-                  <button
-                    onClick={() => onDelete(item.id)}
-                    className="py-0.5 px-2 text-[10px] font-semibold rounded-md border border-red-200 text-red-600 hover:bg-red-50"
-                  >
+                  <button onClick={() => onDelete(item.id)} className="py-0.5 px-2 text-[10px] font-semibold rounded-md border border-red-200 text-red-600 hover:bg-red-50">
                     Del
                   </button>
                 </div>

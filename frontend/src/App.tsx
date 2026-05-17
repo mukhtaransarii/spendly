@@ -10,9 +10,6 @@ import { AuthPage } from './pages/AuthPage'
 import type { Expense } from './types'
 import { formatDate, formatMoney, today } from './utils'
 
-import { migrateLocalData } from './utils/migrate'
-
-
 export default function App() {
   const { expenses, wallet, user, authLoading, loading, logout } = useAppContext()
   const [expenseModalOpen, setExpenseModalOpen] = useState(false)
@@ -30,6 +27,11 @@ export default function App() {
   }
   const money = (amount: number) => showAmount ? formatMoney(amount) : '••••'
 
+  function handleLogout() {
+    if (!confirm('Logout?')) return
+    logout();
+  }
+
   // ── Auth loading splash ──────────────────────────────────────────────────
   if (authLoading) return
     
@@ -45,10 +47,6 @@ export default function App() {
     )
   }
   
-  // Inside App component, check if local data exists
-  const hasLocalData = !!localStorage.getItem('expenses') || !!localStorage.getItem('wallet')
-
-
   const cashSpent = expenses.filter(e => e.method === 'cash').reduce((s, e) => s + Number(e.amount), 0)
   const onlineSpent = expenses.filter(e => e.method === 'online').reduce((s, e) => s + Number(e.amount), 0)
   const cashRemaining = wallet.cash - cashSpent
@@ -87,7 +85,7 @@ export default function App() {
           </button>
 
           {/* Logout */}
-          <button onClick={logout} title={`Logout ${user.name}`} className="w-9 h-9 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-500 hover:bg-red-50 hover:text-red-500 hover:border-red-200">
+          <button onClick={handleLogout} className="w-9 h-9 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-500 hover:bg-red-50 hover:text-red-500 hover:border-red-200">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" /></svg>
           </button>
         </div>
@@ -147,25 +145,6 @@ export default function App() {
           </div>
         </div>
       }
-
-      {hasLocalData && (
-        <div className="mx-4 mt-3 bg-yellow-50 border border-yellow-300 rounded-2xl px-4 py-3 flex items-center justify-between">
-          <div>
-            <div className="text-sm font-bold text-yellow-800">Local data found</div>
-            <div className="text-xs text-yellow-600">Import your old expenses to the database</div>
-          </div>
-          <button
-            onClick={async () => {
-              if (!confirm('Import all local data to your account?')) return
-              await migrateLocalData()
-              window.location.reload() // reload to fetch fresh data from DB
-            }}
-            className="bg-yellow-600 text-white text-xs font-bold px-4 py-2 rounded-xl"
-          >
-            Import
-          </button>
-        </div>
-      )}
 
       {/* Nav */}
       <nav className="sticky top-4 z-20 mx-4 mb-4 flex gap-1 bg-white border border-zinc-200 rounded-2xl p-1 shadow-sm">
