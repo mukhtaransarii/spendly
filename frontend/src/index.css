@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: #f5f4f0;
+  }
+}
+
+.mono {
+  font-family: 'DM Mono', monospace;
+}
